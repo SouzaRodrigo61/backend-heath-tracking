@@ -1,0 +1,143 @@
+version: "3.7"
+
+volumes:
+    postgres:
+    sonarqube_conf:
+    sonarqube_data:
+    sonarqube_extensions:
+    sonarqube_bundled-plugins:
+    prometheus_data: {}
+    grafana_data: {}
+
+networks:
+    front-tier:
+    back-tier:
+    postgres:
+        driver: bridge
+    sonarnet:
+        driver: bridge
+
+services:
+    sonarqube:
+        image: sonarqube
+        ports:
+            - "9000:9000"
+        networks:
+            - sonarnet
+        environment:
+            - sonar.jdbc.url=jdbc:postgresql://postgres:5432/sonar
+            - sonar.jdbc.username=docker
+            - sonar.jdbc.password=postgres
+        volumes:
+            - sonarqube_conf:/opt/sonarqube/conf
+            - sonarqube_data:/opt/sonarqube/data
+            - sonarqube_extensions:/opt/sonarqube/extensions
+            - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+
+    postgres:
+        container_name: postgres_container
+        image: postgres
+        environment:
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: postgres
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "5432:5432"
+        networks:
+            - postgres
+            - sonarnet
+        restart: unless-stopped
+
+    prometheus:
+        image: prom/prometheus:v2.1.0
+        volumes:
+            - ./prometheus/:/etc/prometheus/
+            - prometheus_data:/prometheus
+        command:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus"
+            - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+            - "--web.console.templates=/usr/share/prometheus/consoles"
+        ports:
+            - 9090:9090
+        links:
+            - cadvisor:cadvisor
+            - alertmanager:alertmanager
+        depends_on:
+            - cadvisor
+        networks:
+            - back-tier
+        restart: always
+
+    node-exporter:
+        image: prom/node-exporter
+        volumes:
+            - /proc:/host/proc:ro
+            - /sys:/host/sys:ro
+            - /:/rootfs:ro
+        command:
+            - "--path.procfs=/host/proc"
+            - "--path.sysfs=/host/sys"
+            - --collector.filesystem.ignored-mount-points
+            - "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
+        ports:
+            - 9100:9100
+        networks:
+            - back-tier
+        restart: always
+        deploy:
+            mode: global
+
+    alertmanager:
+        image: prom/alertmanager
+        ports:
+            - 9093:9093
+        volumes:
+            - ./alertmanager/:/etc/alertmanager/
+        networks:
+            - back-tier
+        restart: always
+        command:
+            - "--config.file=/etc/alertmanager/config.yml"
+            - "--storage.path=/alertmanager"
+
+    cadvisor:
+        image: google/cadvisor
+        volumes:
+            - /:/rootfs:ro
+            - /var/run:/var/run:rw
+            - /sys:/sys:ro
+            - /var/lib/docker/:/var/lib/docker:ro
+        ports:
+            - 6060:8080
+        networks:
+            - back-tier
+        restart: always
+        deploy:
+            mode: global
+
+    grafana:
+        image: grafana/grafana
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./data:/var/lib/grafana
+        environment:
+            - GF_SERVER_ROOT_URL=http://grafana.example.com:3000/
+            - GF_SECURITY_ADMIN_USER=admin
+            - GF_SECURITY_ADMIN_PASSWORD=admin
+            - GF_SMTP_ENABLED=true
+            - GF_SMTP_HOST=smtp.gmail.com:587
+            - GF_SMTP_USER=grafana@example.com
+            - GF_SMTP_FROM_ADDRESS=grafana@example.com
+            - GF_SMTP_PASSWORD=******
+            - GF_USERS_ALLOW_SIGN_UP=false
+            - GF_ALERTING_ERROR_OR_TIMEOUT=keep_state
+        restart: always
+        depends_on:
+            - prometheus
+        networks:
+            - back-tier
+            - front-tier
