@@ -7,6 +7,7 @@
         "docker:up": "docker-compose up",
         "docker:down": "docker-compose down",
         "sonar": "mvn clean verify sonar:sonar",
+        "test": "mvn clean package verify",
         "package": "mvn clean package",
         "dev": "mvn quarkus:dev"
     },
