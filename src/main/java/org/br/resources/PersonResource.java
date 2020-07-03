@@ -18,78 +18,71 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.br.models.Fruit;
+import org.br.models.Person;
+import org.br.models.PersonId;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
-
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
-@Path("/fruits")
+@Path("/person")
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class FruitResource implements PanacheRepository<Fruit> {
+@Tags(value = @Tag(name = "Person"))
+public class PersonResource implements PanacheRepository<Person> {
 
-    private static String exceptionFruitText = "Fruit with id of ";
+    private static String exceptionText = "Person with id of ";
     private static String doesntExist = " does not exist.";
 
     @GET
     @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
-    public List<Fruit> list() {
-        return Fruit.listAll();
-    }
-
-    @GET
-    @Path("{id}")
-    public Fruit getSingle(@PathParam Long id) {
-        Fruit entity = Fruit.findById(id);
-        if (entity == null) {
-            throw new WebApplicationException(exceptionFruitText + id + doesntExist, 404);
-        }
-        return entity;
+    public List<Person> list() {
+        return Person.listAll();
     }
 
     @POST
     @Transactional
-    public Response create(Fruit fruit) {
-        if (fruit.id != null) {
+    public Response create(Person person) {
+        if (person.id != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
 
-        fruit.persist();
-        return Response.ok(fruit).status(201).build();
+        person.persist();
+        return Response.ok(person).status(201).build();
     }
 
     @PUT
-    @Path("{id}")
     @Transactional
-    public Fruit update(@PathParam Long id, Fruit fruit) {
-        if (fruit.name == null) {
+    public Person update(Person person) {
+        if (person.id == null) {
             throw new WebApplicationException("Fruit Name was not set on request.", 422);
         }
 
-        Fruit entity = Fruit.findById(id);
+        Person entity = Person.findById(person.id);
 
         if (entity == null) {
-            throw new WebApplicationException(exceptionFruitText + id + doesntExist, 404);
+            throw new WebApplicationException(exceptionText + person.id + doesntExist, 404);
         }
 
-        entity.name = fruit.name;
+        entity.name = person.name;
+        entity.city = person.city;
+        entity.phone = person.phone;
+        entity.gender = person.gender;
 
         return entity;
     }
 
     @DELETE
-    @Path("{id}")
     @Transactional
-    public Response delete(@PathParam Long id) {
-        Fruit entity = Fruit.findById(id);
+    public Response delete(PersonId id) {
+        Person entity = Person.findById(id);
         if (entity == null) {
-            throw new WebApplicationException(exceptionFruitText + id + doesntExist, 404);
+            throw new WebApplicationException(exceptionText + id + doesntExist, 404);
         }
         entity.delete();
         return Response.status(204).build();
