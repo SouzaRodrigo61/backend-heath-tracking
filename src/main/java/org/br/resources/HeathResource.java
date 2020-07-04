@@ -29,7 +29,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tags;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 
-@Path("/health")
+@Path("/person-health")
 @ApplicationScoped
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
