@@ -15,7 +15,6 @@ import org.br.models.enums.PersonType;
 @Cacheable
 public class Person extends PanacheEntity {
 
-
 	@EmbeddedId
 	public PersonId id;
 
