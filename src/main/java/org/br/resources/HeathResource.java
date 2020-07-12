@@ -60,6 +60,8 @@ public class HeathResource implements PanacheRepository<Health> {
             throw new WebApplicationException("Fruit Name was not set on request.", 422);
         }
 
+        System.out.println(helth.toString());
+
         Health entity = Health.findById(helth.healthId);
 
         if (entity == null) {

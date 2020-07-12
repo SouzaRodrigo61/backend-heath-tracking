@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
 @Entity
@@ -57,4 +56,51 @@ public class Health extends PanacheEntityBase {
     @NotNull(message = "Health treatment is empty")
     @Column(length = 40, unique = true)
     public Boolean healthTreatment;
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Health [");
+		if (childhoodDiseases != null) {
+			builder.append("childhoodDiseases=").append(childhoodDiseases).append(", ");
+		}
+		if (congenitaldiseases != null) {
+			builder.append("congenitaldiseases=").append(congenitaldiseases).append(", ");
+		}
+		if (healthId != null) {
+			builder.append("healthId=").append(healthId).append(", ");
+		}
+		if (healthTreatment != null) {
+			builder.append("healthTreatment=").append(healthTreatment).append(", ");
+		}
+		if (heartDiseases != null) {
+			builder.append("heartDiseases=").append(heartDiseases).append(", ");
+		}
+		if (height != null) {
+			builder.append("height=").append(height).append(", ");
+		}
+		if (kidneyDiseases != null) {
+			builder.append("kidneyDiseases=").append(kidneyDiseases).append(", ");
+		}
+		if (neurologicalDiseases != null) {
+			builder.append("neurologicalDiseases=").append(neurologicalDiseases).append(", ");
+		}
+		if (otherComorbidities != null) {
+			builder.append("otherComorbidities=").append(otherComorbidities).append(", ");
+		}
+		if (respiratoryDiseases != null) {
+			builder.append("respiratoryDiseases=").append(respiratoryDiseases).append(", ");
+		}
+		if (weight != null) {
+			builder.append("weight=").append(weight);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+    
 }

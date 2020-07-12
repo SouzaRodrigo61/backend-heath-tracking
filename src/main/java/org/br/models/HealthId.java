@@ -4,8 +4,8 @@ package org.br.models;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
-import javax.persistence.JoinColumns;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 @Embeddable
@@ -68,6 +68,21 @@ public class HealthId implements Serializable {
 	 */
 	public void setPersonId(Person personId) {
 		this.personId = personId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HealthId [");
+		if (personId != null) {
+			builder.append("personId=").append(personId);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
     
