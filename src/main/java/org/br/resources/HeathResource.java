@@ -19,7 +19,6 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.br.models.Health;
-import org.br.models.Person;
 import org.br.models.PersonId;
 import org.eclipse.microprofile.metrics.MetricUnits;
 import org.eclipse.microprofile.metrics.annotation.Counted;
@@ -49,9 +48,6 @@ public class HeathResource implements PanacheRepository<Health> {
     @POST
     @Transactional
     public Response create(Health helth) {
-        if (helth.id != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
-        }
 
         helth.persist();
         return Response.ok(helth).status(201).build();
@@ -60,14 +56,14 @@ public class HeathResource implements PanacheRepository<Health> {
     @PUT
     @Transactional
     public Health update(Health helth) {
-        if (helth.id == null) {
+        if (helth.healthId == null) {
             throw new WebApplicationException("Fruit Name was not set on request.", 422);
         }
 
-        Health entity = Health.findById(helth.id);
+        Health entity = Health.findById(helth.healthId);
 
         if (entity == null) {
-            throw new WebApplicationException(exceptionText + helth.id + doesntExist, 404);
+            throw new WebApplicationException(exceptionText + helth.healthId + doesntExist, 404);
         }
 
         entity.childhoodDiseases = helth.childhoodDiseases;

@@ -2,10 +2,11 @@ package org.br.models;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
@@ -14,9 +15,8 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 @Table
 public class Health extends PanacheEntityBase {
     
-    @Id
-    @NotNull(message = "PersonId is empty")
-    public PersonId id;
+    @EmbeddedId
+    public HealthId healthId;
 
     @NotNull(message = "Weight is empty")
     @Column(length = 40, unique = true)
