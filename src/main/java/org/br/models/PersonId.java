@@ -44,6 +44,59 @@ public class PersonId implements Serializable {
 		return Objects.equals(birthday, other.birthday) && Objects.equals(email, other.email);
 	}
 
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the birthday
+	 */
+	public LocalDate getBirthday() {
+		return birthday;
+	}
+
+	/**
+	 * @param birthday the birthday to set
+	 */
+	public void setBirthday(LocalDate birthday) {
+		this.birthday = birthday;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PersonId [");
+		if (birthday != null) {
+			builder.append("birthday=").append(birthday).append(", ");
+		}
+		if (email != null) {
+			builder.append("email=").append(email);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * 
+	 */
+	public PersonId() {
+	}
+
+
     
 
 }

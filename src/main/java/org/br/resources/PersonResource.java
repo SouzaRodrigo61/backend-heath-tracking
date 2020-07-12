@@ -48,10 +48,6 @@ public class PersonResource implements PanacheRepository<Person> {
     @POST
     @Transactional
     public Response create(Person person) {
-        if (person.id != null) {
-            throw new WebApplicationException("Id was invalidly set on request.", 422);
-        }
-
         person.persist();
         return Response.ok(person).status(201).build();
     }
