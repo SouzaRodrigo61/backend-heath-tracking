@@ -1,18 +1,12 @@
 package org.br.resources;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.Json;
 import javax.transaction.Transactional;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -43,6 +37,21 @@ public class PersonResource implements PanacheRepository<Person> {
     @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public List<Person> list() {
         return Person.listAll();
+    }
+
+
+    @GET
+    @Path("/{email}/{birthday}")
+    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
+    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
+    public Person getById(@PathParam("email") String email, @PathParam("birthday") String birthday) {
+
+        PersonId id = new PersonId();
+
+        id.email = email;
+        id.birthday = LocalDate.parse(birthday);
+
+        return Person.findById(id);
     }
 
     @POST
