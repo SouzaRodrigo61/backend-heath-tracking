@@ -33,8 +33,6 @@ public class PersonResource implements PanacheRepository<Person> {
     private static String doesntExist = " does not exist.";
 
     @GET
-    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
-    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public List<Person> list() {
         return Person.listAll();
     }
@@ -42,8 +40,6 @@ public class PersonResource implements PanacheRepository<Person> {
 
     @GET
     @Path("/{email}/{birthday}")
-    @Counted(name = "performedChecks", description = "How many primality checks have been performed.")
-    @Timed(name = "checksTimer", description = "A measure of how long it takes to perform the primality test.", unit = MetricUnits.MILLISECONDS)
     public Person getById(@PathParam("email") String email, @PathParam("birthday") String birthday) {
 
         PersonId id = new PersonId();
