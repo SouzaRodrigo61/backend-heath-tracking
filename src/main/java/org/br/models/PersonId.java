@@ -1,5 +1,7 @@
 package org.br.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -17,6 +19,7 @@ public class PersonId implements Serializable {
     @Column(length = 40)
     public String email;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @NotNull(message = "Birthday is empty")
     @Column(length = 7)
     public LocalDate birthday;
