@@ -18,7 +18,7 @@ public class PersonId implements Serializable {
     public String email;
 
     @NotNull(message = "Birthday is empty")
-    @Column()
+    @Column(length = 7)
     public LocalDate birthday;
 
 	/* (non-Javadoc)
