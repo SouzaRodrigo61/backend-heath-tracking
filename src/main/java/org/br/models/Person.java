@@ -21,24 +21,24 @@ public class Person extends PanacheEntityBase {
 	public PersonId id;
 
     @NotNull(message = "Name is empty")
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     public String name;
 
     @NotNull(message = "Gender is empty")
-    @Column(length = 1, nullable = false)
+    @Column(length = 1)
     @Convert(converter = PersonType.Mapper.class)
     public PersonType gender;
 
     @NotNull(message = "Phone is empty")
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     public String phone;
 
     @NotNull(message = "City is empty")
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     public String city;
 
     @NotNull(message = "District is empty")
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     public String district;
 
 	/* (non-Javadoc)

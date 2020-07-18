@@ -14,11 +14,11 @@ public class PersonId implements Serializable {
     public static final long serialVersionUID = 3848505909300789567L;
     
     @NotNull(message = "Email is empty")
-    @Column(length = 40, unique = true)
+    @Column(length = 40)
     public String email;
 
     @NotNull(message = "Birthday is empty")
-    @Column(unique = true)
+    @Column()
     public LocalDate birthday;
 
 	/* (non-Javadoc)
