@@ -12,6 +12,8 @@ import org.br.models.enums.PersonType;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 
+import java.util.Objects;
+
 @Entity
 @Cacheable
 @Table
@@ -41,36 +43,33 @@ public class Person extends PanacheEntityBase {
     @Column(length = 40)
     public String district;
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	
+	@NotNull(message = "DistrictCode is empty")
+	@Column(length = 40)
+	public String districtCode;
+
+	@NotNull(message = "CountryCode is empty")
+	@Column(length = 40)
+	public String countryCode;
+
 	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Person [");
-		if (city != null) {
-			builder.append("city=").append(city).append(", ");
-		}
-		if (district != null) {
-			builder.append("district=").append(district).append(", ");
-		}
-		if (gender != null) {
-			builder.append("gender=").append(gender).append(", ");
-		}
-		if (id != null) {
-			builder.append("id=").append(id).append(", ");
-		}
-		if (name != null) {
-			builder.append("name=").append(name).append(", ");
-		}
-		if (phone != null) {
-			builder.append("phone=").append(phone);
-		}
-		builder.append("]");
-		return builder.toString();
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Person person = (Person) o;
+		return Objects.equals(id, person.id) &&
+				Objects.equals(name, person.name) &&
+				gender == person.gender &&
+				Objects.equals(phone, person.phone) &&
+				Objects.equals(city, person.city) &&
+				Objects.equals(district, person.district) &&
+				Objects.equals(districtCode, person.districtCode) &&
+				Objects.equals(countryCode, person.countryCode);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name, gender, phone, city, district, districtCode, countryCode);
 	}
 
 
-    
 }
